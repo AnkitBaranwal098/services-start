@@ -1,3 +1,8 @@
+import {EventEmitter, Injectable} from "@angular/core"
+import { LoggingService } from "./logging.service";
+
+// We use Injectable Decorator to tell Angular that something is going to inject in this service .Also the decorator is acting like a meta data
+@Injectable()
 export class AccountService {
     accounts = [
         {
@@ -14,11 +19,19 @@ export class AccountService {
         }
     ];
 
+    statusUpdated = new EventEmitter<string>();
+
+    constructor(private loggingService:LoggingService){
+
+    }
+
     addAccount(name:string, status:string){
         this.accounts.push({name:name,status:status})
+        this.loggingService.logStatusChange(status);
     }
 
     updateStatus(id:number, status:string){
         this.accounts[id].status = status;
+        this.loggingService.logStatusChange(status);
     }
 }
